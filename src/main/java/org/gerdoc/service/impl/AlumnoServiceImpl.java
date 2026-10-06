@@ -27,4 +27,16 @@ public class AlumnoServiceImpl implements AlumnoService
     {
         return alumnoDao.findById( id );
     }
+
+    @Override
+    public void save(Alumno alumno)
+    {
+        alumnoDao.save( alumno );
+    }
+
+    @Override
+    public void deleteById(Long id)
+    {
+        alumnoDao.deleteById( id );
+    }
 }

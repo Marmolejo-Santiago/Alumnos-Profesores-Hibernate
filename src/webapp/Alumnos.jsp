@@ -18,13 +18,17 @@
         AlumnoService alumnoService = new AlumnoServiceImpl( );
         List<Alumno> alumnos = alumnoService.findAll( );
     %>
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#alumnoModal">
+        Agregar alumno
+    </button>
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">ID</th>
+            <th scope="col">#</th>
             <th scope="col">Nombre</th>
             <th scope="col">Edad</th>
             <th scope="col">Promedio</th>
+            <th scope="col">Acción</th>
         </tr>
         </thead>
         <%
@@ -34,10 +38,24 @@
         %>
                 <tbody>
                     <tr>
-                        <th scope="row"><%=i++%></th>
-                        <td><%= alumno.getNombre( )%></td>
+                        <th scope="row"><%=++i%></th>
+                        <td>
+                            <a href="Alumno.jsp?id=<%= alumno.getId( ) %>" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                <%= alumno.getNombre( ) %>
+                            </a>
+                        </td>
                         <td><%= alumno.getEdad( )%></td>
                         <td><%= alumno.getPromedio( )%></td>
+                        <td>
+                            <form action="AlumnoServlet" method="post" style="display:inline;">
+                                <input type="hidden" name="accion" value="delete">
+                                <input type="hidden" name="id" value="<%= alumno.getId( ) %>">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Seguro que deseas borrar este alumno?');">
+                                    Borrar
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 </tbody>
         <%
@@ -45,6 +63,52 @@
         %>
     </table>
 </div>
+<!-- Popup / Modal con formulario -->
+<div class="modal fade" id="alumnoModal" tabindex="-1" aria-labelledby="alumnoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="alumnoModalLabel">Formulario de alumno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <form action="AlumnoServlet" method="post">
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edad" class="form-label">Edad</label>
+                        <input type="number" class="form-control" id="edad" name="edad" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="promedio" class="form-label">Promedio</label>
+                        <input type="number" step="0.01" class="form-control" id="promedio" name="promedio" required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+
+                    <button type="submit" class="btn btn-primary">
+                        Enviar formulario
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
