@@ -13,12 +13,12 @@
 </head>
 <body>
 <div class="container">
-    <h1>Proyecto funcionando</h1>
+    <h1>Alumnos</h1>
     <%
         AlumnoService alumnoService = new AlumnoServiceImpl( );
         List<Alumno> alumnos = alumnoService.findAll( );
     %>
-    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#alumnoModal">
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#alumnoModal" onclick="nuevoAlumno()" >
         Agregar alumno
     </button>
     <table class="table">
@@ -47,6 +47,14 @@
                         <td><%= alumno.getEdad( )%></td>
                         <td><%= alumno.getPromedio( )%></td>
                         <td>
+                            <!-- BOTÓN EDITAR -->
+
+                            <button type="button" class="btn btn-warning btn-sm btn-editar" data-bs-toggle="modal" data-bs-target="#alumnoModal"
+                                    data-id="<%= alumno.getId( ) %>" data-nombre="<%= alumno.getNombre( ) %>" data-edad="<%= alumno.getEdad( ) %>"
+                                    data-promedio="<%= alumno.getPromedio( ) %>" >
+                                Editar
+                            </button>
+                            <!-- BOTÓN BORRAR -->
                             <form action="AlumnoServlet" method="post" style="display:inline;">
                                 <input type="hidden" name="accion" value="delete">
                                 <input type="hidden" name="id" value="<%= alumno.getId( ) %>">
@@ -62,6 +70,7 @@
             }
         %>
     </table>
+    <a href="index.jsp" class="btn btn-secondary">Home</a>
 </div>
 <!-- Popup / Modal con formulario -->
 <div class="modal fade" id="alumnoModal" tabindex="-1" aria-labelledby="alumnoModalLabel" aria-hidden="true">
@@ -73,7 +82,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
-            <form action="AlumnoServlet" method="post">
+            <form action="AlumnoServlet" method="post" id="formAlumno">
+                <input type="hidden" id="accion" name="accion" value="save" />
+                <input type="hidden" id="id" name="id" value="">
                 <div class="modal-body">
 
                     <div class="mb-3">
@@ -99,7 +110,7 @@
                     </button>
 
                     <button type="submit" class="btn btn-primary">
-                        Enviar formulario
+                        Guardar alumno
                     </button>
                 </div>
             </form>
@@ -110,5 +121,39 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<!-- JAVASCRIPT -->
+
+<script>
+    function nuevoAlumno()
+    {
+        document.getElementById("formAlumno").reset();
+        document.getElementById("id").value = "";
+        document.getElementById("accion").value = "save";
+        document.getElementById("alumnoModalLabel").textContent = "Agregar alumno";
+        document.getElementById("btnGuardar").textContent = "Guardar alumno";
+    }
+    const modalAlumno = document.getElementById("alumnoModal");
+    modalAlumno.addEventListener("show.bs.modal",
+        function(event)
+        {
+            const boton = event.relatedTarget;
+            if (!boton || !boton.classList.contains("btn-editar"))
+            {
+                return;
+            }
+            const id = boton.getAttribute("data-id");
+            const nombre = boton.getAttribute("data-nombre");
+            const edad = boton.getAttribute("data-edad");
+            const promedio = boton.getAttribute("data-promedio");
+            document.getElementById("id").value = id;
+            document.getElementById("nombre").value = nombre;
+            document.getElementById("edad").value = edad;
+            document.getElementById("promedio").value = promedio;
+            document.getElementById("accion").value = "update";
+            document.getElementById("alumnoModalLabel").textContent = "Editar alumno";
+            document.getElementById("btnGuardar").textContent = "Actualizar alumno";
+        }
+    );
+</script>
 </body>
 </html>

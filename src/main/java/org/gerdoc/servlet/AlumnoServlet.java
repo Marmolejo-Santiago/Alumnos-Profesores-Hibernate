@@ -30,17 +30,25 @@ public class AlumnoServlet extends HttpServlet
             resp.sendRedirect("Alumnos.jsp");
             return;
         }
-        String nombre = req.getParameter("nombre");
-        Integer edad = Integer.parseInt(req.getParameter("edad"));
-        Double promedio = Double.parseDouble(req.getParameter("promedio"));
+        String nombre = req.getParameter("nombre" );
+        Integer edad = Integer.parseInt( req.getParameter("edad" ) );
+        Double promedio = Double.parseDouble( req.getParameter("promedio" ) );
+        Long id = Long.parseLong( req.getParameter("id" ) );
 
         Alumno alumno = Alumno.builder( )
                 .nombre( nombre )
                 .edad( edad )
                 .promedio( promedio )
                 .build();
-
-        alumnoService.save( alumno );
+        if( "update".equals(accion) )
+        {
+            alumno.setId( id );
+            alumnoService.update( alumno );
+        }
+        else
+        {
+            alumnoService.save( alumno );
+        }
         resp.sendRedirect("Alumnos.jsp");
     }
 }

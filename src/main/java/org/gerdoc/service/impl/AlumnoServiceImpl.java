@@ -39,4 +39,10 @@ public class AlumnoServiceImpl implements AlumnoService
     {
         alumnoDao.deleteById( id );
     }
+
+    @Override
+    public void update(Alumno alumno)
+    {
+        alumnoDao.update( alumno );
+    }
 }
